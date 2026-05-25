@@ -1,2 +1,0 @@
-# Keygen-dapur
-Lisensi
