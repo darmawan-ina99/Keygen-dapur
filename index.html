@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Lisensi Massal - Dapur Nona</title>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+        button { background: #DC2626; color: white; padding: 12px; border: none; border-radius: 10px; font-size: 16px; width: 100%; margin: 10px 0; }
+        .success { color: green; }
+        .error { color: red; }
+        pre { background: white; padding: 10px; border-radius: 8px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h2>🔑 Input Lisensi Dapur Nona</h2>
+    <p>Klik tombol di bawah untuk menambahkan 20 lisensi sekaligus ke Firestore.</p>
+    <button id="btnAdd">📦 Tambah Semua Lisensi</button>
+    <div id="result"></div>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyA07nm6AuNKeqF20Q4TS15eK2tuTnC8WwU",
+            authDomain: "siti-ju.firebaseapp.com",
+            projectId: "siti-ju",
+            storageBucket: "siti-ju.firebasestorage.app"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        const licenses = [
+            "DN-LIC-001A-9X2B", "DN-LIC-002B-7Y4C", "DN-LIC-003C-5Z6D", "DN-LIC-004D-3W8E",
+            "DN-LIC-005E-1V0F", "DN-LIC-006F-9U2G", "DN-LIC-007G-8T3H", "DN-LIC-008H-7S4I",
+            "DN-LIC-009I-6R5J", "DN-LIC-010J-5Q6K", "DN-LIC-011K-4P7L", "DN-LIC-012L-3O8M",
+            "DN-LIC-013M-2N9N", "DN-LIC-014N-1M0O", "DN-LIC-015O-0L1P", "DN-LIC-016P-9K2Q",
+            "DN-LIC-017Q-8J3R", "DN-LIC-018R-7I4S", "DN-LIC-019S-6H5T", "DN-LIC-020T-5G6U"
+        ];
+
+        document.getElementById('btnAdd').onclick = async () => {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = "<p>⏳ Sedang menambahkan...</p>";
+            
+            let success = 0, failed = 0;
+            for (let i = 0; i < licenses.length; i++) {
+                try {
+                    await db.collection("licenses").add({
+                        code: licenses[i],
+                        usedBy: null,
+                        usedAt: null
+                    });
+                    success++;
+                } catch (err) {
+                    failed++;
+                    console.error(err);
+                }
+            }
+            resultDiv.innerHTML = `<p class="success">✅ ${success} lisensi berhasil ditambahkan!</p>${failed > 0 ? `<p class="error">❌ ${failed} gagal</p>` : ''}<p>🔁 Refresh halaman Firestore untuk melihat hasilnya.</p>`;
+        };
+    </script>
+</body>
+</html>
